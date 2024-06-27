@@ -2,7 +2,8 @@ import os
 from transformers import TrainingArguments
 
 import transformers
-from .tools.text_gen import preprocessing_function, preprocessing_function_test
+from .tools.text_gen import preprocessing_function, url_encode, gen, remove_enter, remove_space
+from .tools.article_crawling import art_crawl
 
 class Trainer:
     def train(self, model, data, tokenizer, train_args=None):
@@ -45,8 +46,29 @@ class Trainer:
         model.config.use_cache = False  # silence the warnings. Please re-enable for inference!
         trainer.train()        
 
-    def test(self):
-        pass
+    def test(self, text, model, tokenizer):
+
+        url = url_encode(text)
+
+        if url==None:
+            return "url을 입력해주세요."
+
+        news = art_crawl(url)
+
+        if len(news['main'])==0:
+            return "잘 못된 url 입니다."
+
+        for rm_ent in remove_enter:
+            description = news['main'].replace(rm_ent, '\n')
+
+        for rm_spc in remove_space:
+            description = description.replace(rm_spc, ' ')
+
+        prompt = f"제목 : {news['title']}\n본문: {description}\n요약:"
+
+        summary = gen(f"요약해줘\n{prompt}", model, tokenizer)
+        
+        return summary
 
 
 # def main(args):

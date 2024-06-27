@@ -1,5 +1,25 @@
 import re
 
+def url_encode(text: str):
+    "url 검출"
+    
+    # URL 추출할 정규표현식 생성
+    url_regex = r"(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)"
+
+    reg = re.compile(url_regex)
+    
+    res = reg.search(text)
+    
+    if res == None:
+        return text
+    
+    else:
+        indexes = res.span()
+        
+        url_txt = text[indexes[0]:indexes[1]]
+        
+        return url_txt
+
 def clean_text(text):
   text_rmv = re.sub('[-=+,#/\?^@*\"※~ㆍ!』‘|\(\)\[\]`\'…》\”\“\’·]', '', text)
   return text_rmv
