@@ -1,3 +1,9 @@
+import re
+
+def clean_text(text):
+  text_rmv = re.sub('[-=+,#/\?^@*\"※~ㆍ!』‘|\(\)\[\]`\'…》\”\“\’·]', '', text)
+  return text_rmv
+
 def gen(x, model, tokenizer):
     gened = model.generate(
         **tokenizer(
@@ -12,14 +18,15 @@ def gen(x, model, tokenizer):
     )
     gened = tokenizer.decode(gened[0])
     split_gened = gened.split('\n')
-    summary = split_gened[-1]
-
-    summary_list = summary.split('요약: ')
+    
     output_text = ""
-    for idx, summary in  enumerate(summary_list):
-        output_text += f"{idx+1}. {summary}\n"
+    idx = 0
+    for gen_text in split_gened:
+        if gen_text.find('요약:')>=0:
+            gen_text = clean_text(gen_text)
+            output_text +=f"{idx+1}. {gen_text}\n"
 
-    print(output_text)
+    return output_text
 
 def preprocessing_function(examples, tokenizer, MAX_LEN=1024):
     texts = examples['text']
@@ -35,9 +42,7 @@ def preprocessing_function(examples, tokenizer, MAX_LEN=1024):
             else:
                 descriptions = descriptions + ' ' + text_line['sentence']
         
-        
-
-    prompt = f"제목 : {examples['title']}\n본문: {descriptions}\n요약: {examples['abstractive']}"
+    prompt = f"### 요청 : 다음 제목이랑 본문을 보고 내용을 요약 해줘 [제목 : {examples['title']}\n본문: {descriptions}]\n ### 답변 : [요약: {examples['abstractive']}]"
     tokenized = tokenizer(prompt, truncation=True, padding="max_length", max_length=MAX_LEN)
 
 
@@ -57,9 +62,7 @@ def preprocessing_function_test(examples, tokenizer, MAX_LEN=1024):
             else:
                 descriptions = descriptions + ' ' + text_line['sentence']
         
-        
-
-    prompt = f"제목 : {examples['title']}\n본문: {descriptions}\n요약:"
+    prompt = f"### 요청 : 제목이랑 본문의 내용 요약해줘 [제목 : {examples['title']}\n본문: {descriptions}]\n ### 답변 : [요약: ]"
     tokenized = tokenizer(prompt, truncation=True, max_length=MAX_LEN)
 
 

@@ -4,16 +4,15 @@ from tqdm.notebook import tqdm
 
 def art_crawl(url):
     """
-    sid와 링크 인덱스를 넣으면 기사제목, 날짜, 본문을 크롤링하여 딕셔너리를 출력하는 함수 
-    
-    Args: 
-        all_hrefs(dict): 각 분야별로 100페이지까지 링크를 수집한 딕셔너리 (key: 분야(sid), value: 링크)
-        sid(int): 분야 [100: 정치, 101: 경제, 102: 사회, 103: 생활/문화, 104: 세계, 105: IT/과학]
-        index(int): 링크의 인덱스
-    
+    sid와 링크 인덱스를 넣으면 기사제목, 날짜, 본문을 크롤링하여 딕셔너리를 출력하는 함수
+
+    Args:
+        url: 크롤링할 사이트 url
+
+
     Returns:
         dict: 기사제목, 날짜, 본문이 크롤링된 딕셔너리
-    
+
     """
     art_dic = {}
     

@@ -1,12 +1,8 @@
 import os
-import argparse
-from transformers import AutoTokenizer 
 from transformers import TrainingArguments
 
 import transformers
-from dataset import ArticleDataset
 from .tools.text_gen import preprocessing_function, preprocessing_function_test
-from .model import HuggingfaceModel
 
 class Trainer:
     def train(self, model, data, tokenizer, train_args=None):
@@ -17,7 +13,8 @@ class Trainer:
             preprocessing_function, 
             batched=False, 
             remove_columns=col_to_delete, 
-            num_proc=int(os.cpu_count()/2))
+            num_proc=int(os.cpu_count()/2),
+            fn_kwargs={"tokenizer": tokenizer})
         # Rename the target to label as for HugginFace standards
         # tokenized_datasets = tokenized_datasets.rename_column("target", "label")
         # Set to torch format
@@ -52,45 +49,45 @@ class Trainer:
         pass
 
 
-def main(args):
-    dataset = ArticleDataset(args.dataset_path)
-    data = dataset.create_datasets()
+# def main(args):
+#     dataset = ArticleDataset(args.dataset_path)
+#     data = dataset.create_datasets()
     
-    tokenizer = AutoTokenizer.from_pretrained(args.hf_model_path, trust_remote_code=True,)
-    # set pad token - to avoid error while training
-    tokenizer.pad_token = tokenizer.eos_token
+#     tokenizer = AutoTokenizer.from_pretrained(args.hf_model_path, trust_remote_code=True,)
+#     # set pad token - to avoid error while training
+#     tokenizer.pad_token = tokenizer.eos_token
 
-    hf_model = HuggingfaceModel()
-    model = hf_model.from_pretrained(args.hf_model_path)
+#     hf_model = HuggingfaceModel()
+#     model = hf_model.from_pretrained(args.hf_model_path)
 
-    trainer = Trainer()
+#     trainer = Trainer()
 
-    train_args = TrainingArguments(
-                per_device_train_batch_size=args.device_per_batch_size,
-                gradient_accumulation_steps=1,
-                max_steps=args.max_steps,
-                learning_rate=args.learning_rate,
-                fp16=True,
-                logging_steps=50,
-                logging_dir=f"{args.save_dir}/logs",
-                output_dir=f"{args.save_dir}",
-                # optim="paged_adamw_8bit"
-            )
-
-
-    trainer.train(model, data, tokenizer, train_args=train_args)
+#     train_args = TrainingArguments(
+#                 per_device_train_batch_size=args.device_per_batch_size,
+#                 gradient_accumulation_steps=1,
+#                 max_steps=args.max_steps,
+#                 learning_rate=args.learning_rate,
+#                 fp16=True,
+#                 logging_steps=50,
+#                 logging_dir=f"{args.save_dir}/logs",
+#                 output_dir=f"{args.save_dir}",
+#                 # optim="paged_adamw_8bit"
+#             )
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset_path", type=str, default="./data.json")
-    parser.add_argument("--hf_model_path", type=str, default="beomi/KoAlpaca-Polyglot-5.8B")
-    parser.add_argument("--load_checkpoint", type=str, default="./model_checkpoints")
-    parser.add_argument("--max_steps", type=int, default=40000)
-    parser.add_argument("--learning_rate", type=float, default=1e-4)
-    parser.add_argument("--save_dir", type=str, default="./model_save")
+#     trainer.train(model, data, tokenizer, train_args=train_args)
 
 
-    args = parser.parse_args()
-    main(args)
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument("--dataset_path", type=str, default="./data.json")
+#     parser.add_argument("--hf_model_path", type=str, default="beomi/KoAlpaca-Polyglot-5.8B")
+#     parser.add_argument("--load_checkpoint", type=str, default="./model_checkpoints")
+#     parser.add_argument("--max_steps", type=int, default=40000)
+#     parser.add_argument("--learning_rate", type=float, default=1e-4)
+#     parser.add_argument("--save_dir", type=str, default="./model_save")
+
+
+#     args = parser.parse_args()
+#     main(args)
 
