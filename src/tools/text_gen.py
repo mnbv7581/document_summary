@@ -1,5 +1,8 @@
 import re
 
+remove_enter = ['\n','\n\n','\n\n\n','\n\n\n\n','\n\n\n\n\n','\n\n\n\n\n\n', u'\xa0',]
+remove_space = ['  ','   ','    ','     ','       ','        ','         ','          ',]
+
 def url_encode(text: str):
     "url 검출"
     
