@@ -2,8 +2,8 @@ import os
 from transformers import TrainingArguments
 
 import transformers
-from .tools.text_gen import preprocessing_function, url_encode, gen, remove_enter, remove_space
-from .tools.article_crawling import art_crawl
+from src.tools.text_gen import preprocessing_function, url_encode, gen, remove_enter, remove_space
+from src.tools.article_crawling import art_crawl
 
 class Trainer:
     def train(self, model, data, tokenizer, train_args=None):
