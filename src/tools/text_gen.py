@@ -39,14 +39,17 @@ def gen(x, model, tokenizer):
             return_tensors='pt',
             return_token_type_ids=False
         ),
-        max_new_tokens=512,
+        max_new_tokens=256,
         early_stopping=True,
         do_sample=True,
+        num_beams=3, #Beam Search 수행, 1보다 큰 값을 지정
+        num_return_sequences=2, # 두 개의 문장을 리턴
         top_k=50, # 확률 순위가 50위 밖인 토큰은 샘플링에서 제외
         top_p=0.95, # 누적 확률이 95%인 후보집합에서만 생성
-        temperature=0.9, # 확률분포를 sharp하게 만들고 확률값이 높은 토큰이 더 잘 나오도록 설정.
+        temperature=0.7, # 확률분포를 sharp하게 만들고 확률값이 높은 토큰이 더 잘 나오도록 설정.
         repetition_penalty=1.5,
-        eos_token_id=tokenizer.eos_token_id,
+        eos_token_id=2,
+        pad_token_id=0
     )
     gened = tokenizer.decode(gened[0])
     split_gened = gened.split('\n')
