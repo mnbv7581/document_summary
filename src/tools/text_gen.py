@@ -37,7 +37,7 @@ def gen(x, model, tokenizer):
         **tokenizer(
             x,
             return_tensors='pt',
-            # return_token_type_ids=False
+            return_token_type_ids=False
         ),
         max_new_tokens=1024,
         early_stopping=True,
