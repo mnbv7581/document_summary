@@ -43,8 +43,7 @@ def gen(x, model, tokenizer):
         early_stopping=True,
         do_sample=True,
         num_beams=3,
-        no_repeat_ngram_size=2,
-        num_return_sequences=3,
+        repetition_penalty=1.5,
         eos_token_id=tokenizer.eos_token_id,
     )
     gened = tokenizer.decode(gened[0])
