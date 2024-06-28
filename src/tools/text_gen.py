@@ -42,7 +42,7 @@ def gen(x, model, tokenizer):
         max_new_tokens=1024,
         early_stopping=True,
         do_sample=True,
-        top_k=50, # 확률 순위가 50위 밖인 토큰은 샘플링에서 제외
+        top_k=5, # 확률 순위가 50위 밖인 토큰은 샘플링에서 제외
         top_p=0.95, # 누적 확률이 95%인 후보집합에서만 생성
         repetition_penalty=1.5,
         num_return_sequences=3,
