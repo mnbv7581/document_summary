@@ -26,6 +26,7 @@ def url_encode(text: str):
 
 def clean_text(text):
     text_rmv = re.sub('[-=+,#/\?^@*\"※~ㆍ!』‘|\(\)\[\]`\'…》\”\“\’·]', '', text)
+    text_rmv = re.sub(r"[^\uAC00-\uD7A30-9a-zA-Z\s]", "", text_rmv)
     text_rmv = text_rmv.replace('\n', '')       
     for rm_spc in remove_space:
         text_rmv = text_rmv.replace(rm_spc, ' ')
