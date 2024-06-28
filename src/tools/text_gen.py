@@ -39,11 +39,12 @@ def gen(x, model, tokenizer):
             return_tensors='pt',
             return_token_type_ids=False
         ),
-        max_new_tokens=1024,
+        max_new_tokens=512,
         early_stopping=True,
         do_sample=True,
-        num_beams=3,
+        num_beams=5,
         repetition_penalty=1.5,
+        num_return_sequences=3,
         eos_token_id=tokenizer.eos_token_id,
     )
     gened = tokenizer.decode(gened[0])
