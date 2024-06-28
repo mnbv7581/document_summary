@@ -37,9 +37,9 @@ def gen(x, model, tokenizer):
         **tokenizer(
             x,
             return_tensors='pt',
-            return_token_type_ids=False
+            # return_token_type_ids=False
         ),
-        max_new_tokens=512,
+        max_new_tokens=1024,
         early_stopping=True,
         do_sample=True,
         top_k=5, # 확률 순위가 50위 밖인 토큰은 샘플링에서 제외
