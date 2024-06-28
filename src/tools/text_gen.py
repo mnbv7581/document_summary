@@ -1,6 +1,7 @@
 import re
 
-remove_enter = ['\n','\n\n','\n\n\n','\n\n\n\n','\n\n\n\n\n','\n\n\n\n\n\n', u'\xa0',]
+remove_enter = ["'\'", '\n','\n\n','\n\n\n','\n\n\n\n','\n\n\n\n\n','\n\n\n\n\n\n',\
+                '\n\n\n\n\n\n\n','\n\n\n\n\n\n\n\n','\n\n\n\n\n\n\n\n\n','\n\n\n\n\n\n\n\n\n\n', u'\xa0',]
 remove_space = ['  ','   ','    ','     ','       ','        ','         ','          ',]
 
 def url_encode(text: str):
@@ -24,8 +25,12 @@ def url_encode(text: str):
         return url_txt
 
 def clean_text(text):
-  text_rmv = re.sub('[-=+,#/\?^@*\"※~ㆍ!』‘|\(\)\[\]`\'…》\”\“\’·]', '', text)
-  return text_rmv
+    text_rmv = re.sub('[-=+,#/\?^@*\"※~ㆍ!』‘|\(\)\[\]`\'…》\”\“\’·]', '', text)
+    for rm_ent in remove_enter:
+        text_rmv = text_rmv.replace(rm_ent, '')       
+    for rm_spc in remove_space:
+        text_rmv = text_rmv.replace(rm_spc, ' ')
+    return text_rmv
 
 def gen(x, model, tokenizer):
     gened = model.generate(
@@ -34,9 +39,12 @@ def gen(x, model, tokenizer):
             return_tensors='pt',
             return_token_type_ids=False
         ),
-        max_new_tokens=512,
+        max_new_tokens=1024,
         early_stopping=True,
         do_sample=True,
+        num_beams=3,
+        no_repeat_ngram_size=2,
+        num_return_sequences=3,
         eos_token_id=tokenizer.eos_token_id,
     )
     gened = tokenizer.decode(gened[0])
