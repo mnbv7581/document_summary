@@ -1,8 +1,7 @@
 import os
 from transformers import TrainingArguments
-
 import transformers
-from src.tools.text_gen import preprocessing_function, url_encode, gen, remove_enter, remove_space
+from src.tools.text_gen import preprocessing_function, url_encode, gen, remove_enter, remove_space, clean_text
 from src.tools.article_crawling import art_crawl
 
 class Trainer:
@@ -63,6 +62,8 @@ class Trainer:
 
         for rm_spc in remove_space:
             description = description.replace(rm_spc, ' ')
+        
+        description = clean_text(description)
 
         prompt = f"제목 : {news['title']}\n본문: {description}\n요약:"
 
