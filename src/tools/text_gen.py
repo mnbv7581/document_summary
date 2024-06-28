@@ -34,10 +34,10 @@ def gen(x, model, tokenizer):
             return_tensors='pt',
             return_token_type_ids=False
         ),
-        max_new_tokens=1024,
+        max_new_tokens=512,
         early_stopping=True,
         do_sample=True,
-        eos_token_id=2,
+        eos_token_id=tokenizer.eos_token_id,
     )
     gened = tokenizer.decode(gened[0])
     split_gened = gened.split('\n')
