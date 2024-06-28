@@ -46,8 +46,6 @@ def gen(x, model, tokenizer):
         top_p=0.95, # 누적 확률이 95%인 후보집합에서만 생성
         temperature=0.9, # 확률분포를 sharp하게 만들고 확률값이 높은 토큰이 더 잘 나오도록 설정.
         repetition_penalty=1.5,
-        num_beams=3,
-        num_return_sequences=3,
         eos_token_id=tokenizer.eos_token_id,
     )
     gened = tokenizer.decode(gened[0])
