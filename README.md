@@ -14,6 +14,7 @@ with open(json_file_path,'r') as json_file:
 with open(f"{save_path}/article_train_docs.json",'w') as json_file:
     json.dump(documents, json_file)
 ```
+# [Model Path](https://huggingface.co/syim/article_summary/tree/main)
 
 # Requirement
 * pytorch > 1.13.x
